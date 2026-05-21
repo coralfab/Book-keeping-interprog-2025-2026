@@ -1,4 +1,21 @@
 import records as rec
+import digitchecker as digits
+
+rec.transaction = []
+f = open("savedtransactions.txt", "r")
+for line in f:
+    line = line.strip()
+    if line == "":
+        continue
+    
+    textrecords = line.split(",")
+    
+    if len(textrecords) != 4:
+        continue 
+    
+    textrecords[3] = int(textrecords[3])
+    rec.transaction.append(textrecords)
+f.close()
 
 def view_transaction():
     while True:
@@ -13,7 +30,7 @@ def view_transaction():
                 print(f"{number} - {index[0]} - {index[1]} - {index[2]} - {index[3]}")
                 number += 1
 
-        view = input("Select a record number to view/(Type exit to go back): ").strip().lower()
+        view = input("Select a record number to view/(Type exit to go back): ").strip()
 
         if view.lower() == "exit":
             break
@@ -22,13 +39,13 @@ def view_transaction():
             print("Invalid input!")
             continue
         
-        if not view.isdigit():
+        if not digits.numvalidator(view):
                 print("Invalid input! Numbers only!")
                 continue
             
         view = int(view)
         if view < 1 or view > len(rec.transaction):
-            print("Invalid number! Record number doesn't exist yet!")
+            print("\n======Invalid number! Record number doesn't exist yet!======")
             continue
 
         record = rec.transaction[view - 1]
@@ -67,17 +84,17 @@ def remove_transaction():
 
             remove = input("Select a record number to delete/(Type exit to go back): ").strip()
 
-            if remove.lower == "exit":
+            if remove.lower() == "exit":
                 break
 
-            if not remove.isdigit():
+            if not digits.numvalidator(remove): 
                 print("Invalid input! Numbers only!")
                 continue
 
             remove = int(remove)
 
             if remove < 1 or remove > len(rec.transaction):
-                print("Invalid number! Record number doesn't exist yet!")
+                print("\n======Invalid number! Record number doesn't exist yet!======")
                 continue
 
             removed_record = rec.transaction.pop(remove - 1)
@@ -119,6 +136,7 @@ while True:
     print("   2. View transaction history")
     print("   3. Remove transaction record")
     print("   4. Exit program")
+    print("=" * 40) 
     
     #Will ask the user to choose between the choices
     choice = (input("Choose a number (1 - 4): ")).strip()
@@ -140,20 +158,17 @@ while True:
                                         
                 
     elif choice == 4:
-        if not rec.transaction:
+        while True:
+            print("=" * 40 ) 
+            confirm = input("Are you sure you want to exit? Y/N: ").strip().lower()
+            if confirm == "y":
+                break
+            if confirm == "n":
+                print("Exit cancelled going back to menu...")
+                break
+            else:
+                print("Invalid input! Please enter Y or N.")
+        if confirm == "y":
             print("Exiting program...")
             break
-        else:
-            while True:
-                confirm = input("Are you sure you want to exit? Your saved transaction records will be gone! (Y/N): ").strip().lower()
-                if confirm == "y":
-                    break
-                if confirm == "n":
-                    print("Exit cancelled going back to menu...")
-                    break
-                else:
-                    print("Invalid input! Please enter Y or N.")
-            if confirm == "y":
-                print("Exiting program...")
-                break
             

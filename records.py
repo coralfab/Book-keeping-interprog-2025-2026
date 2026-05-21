@@ -1,10 +1,13 @@
+import digitchecker as digits
 transaction = []
 
 def record_transaction():
     while True:
+        print("=" * 40 ) 
         print("Recording transactions!\n")
         
         while True: # Will ask the date of the transaction
+            print("=" * 40 ) 
             calendar = input("Date of transaction (YYYY/MM/DD): ").strip()
             parts = calendar.split("/")
             
@@ -16,31 +19,34 @@ def record_transaction():
                 print("Invalid format! Ex. 2025/01/01")
                 continue
 
-            if not (parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit()):
+            if not (digits.numvalidator(parts[0]) and 
+                    digits.numvalidator(parts[1]) and 
+                    digits.numvalidator(parts[2])):
                 print("Invalid format numbers only! Ex. 2025/01/01")
                 continue
             break
-                
+        print("=" * 40 )     
         #Will ask what type of transaction was received    
         while True:
+             
             type_money = input("What type of transaction (expense/income): ").strip().lower()
             if type_money == "expense" or type_money == "income":
                 break
             else:
                 print("Invalid input! expense/income only!")
-        
+        print("=" * 40 ) 
         #Wil ask information about expense/income son
         description = input("Description about transaction: ").strip()
-        
+        print("=" * 40 )  
         #Will ask about amount of money received bro
-        while True:
+        while True: 
             money_input = input("Amount: ").strip()
             
             if money_input == "":
                 print("Invalid input!")
                 continue
             
-            if not money_input.isdigit():
+            if not digits.numvalidator(money_input): 
                 print("Invalid input! Numbers only!")
                 continue
             
@@ -49,8 +55,8 @@ def record_transaction():
                 print("Invalid input must be greater than 0!")
                 continue
             break
-            
-        print("=====================")       
+        print("=" * 40 )      
+        print("\n=====================")       
         print("Transaction recorded!")
         print(f"Date: {calendar}")
         print(f"Type: {type_money}")
@@ -59,6 +65,9 @@ def record_transaction():
         print("=====================") 
         
         transaction.append([calendar, type_money, description, money])
+        f = open("savedtransactions.txt", "a")
+        f.write(f"{calendar},{type_money},{description},{money}\n")
+        f.close()
     
         #This will if the user wants to recond another transaction
         while True:
@@ -69,3 +78,5 @@ def record_transaction():
                 return     
             else:
                 print("Invalid input! Enter Y or N:")
+                
+        
